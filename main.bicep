@@ -1,5 +1,6 @@
 param resourcePrefix string
 param virtualNetworkPrefix string
+param location string
 param currentDate string = utcNow('yyyy-MM-dd')
 
 var subnetname = '${resourcePrefix}-sn'
@@ -13,6 +14,7 @@ module sta 'Modules/storageAccount.bicep' = {
   params: {
     storageAccountPrefix: resourcePrefix
     tagValues: tagValues
+    location: location
   }
 }
 
@@ -22,6 +24,7 @@ module nsg 'Modules/networkSecurityGroup.bicep' = {
     ResourcePrefix: resourcePrefix
     tagValues: tagValues
     securityRules: []
+    location: location
   }
 }
 
@@ -31,6 +34,7 @@ module vnet 'Modules/virtualNetwork.bicep' = {
     ResourcePrefix: resourcePrefix
     virtualNetworkPrefix: virtualNetworkPrefix
     tagValues: tagValues
+    location: location
     subnets: [
       {
         name: subnetname
@@ -51,5 +55,6 @@ module privateEndPoint 'Modules/privateEndpoint.bicep' = {
     storageAccountId: sta.outputs.staid
     vnetId: vnet.outputs.vnetid
     subnetName: subnetname
+    location: location
   }
 }
